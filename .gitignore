@@ -1,0 +1,20 @@
+# Ignore arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Ignore logs e bancos de dados locais
+*.log
+*.sql
+*.sqlite
+*.db
+
+# Ignore arquivos de ambiente
+.env
+
+# Ignore diretórios de IDEs
+.vscode/
+.idea/
+
+# Ignore dependências do sistema
+node_modules/
+vendor/
