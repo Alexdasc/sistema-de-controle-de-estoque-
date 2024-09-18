@@ -1,0 +1,69 @@
+-- Criação do Banco de Dados
+CREATE DATABASE SistemaControleEstoque;
+USE SistemaControleEstoque;
+
+-- Criação da Tabela de Fornecedores
+CREATE TABLE Fornecedores (
+  FornecedorID INT PRIMARY KEY AUTO_INCREMENT,
+  NomeFornecedor VARCHAR(100),
+  ContatoFornecedor VARCHAR(100),
+  TelefoneFornecedor VARCHAR(20)
+);
+
+-- Criação da Tabela de Produtos com a chave estrangeira e ON DELETE CASCADE
+CREATE TABLE Produtos (
+  ProdutoID INT PRIMARY KEY AUTO_INCREMENT,
+  NomeProduto VARCHAR(100),
+  QuantidadeEstoque INT,
+  PrecoUnitario DECIMAL(10, 2),
+  FornecedorID INT,
+  FOREIGN KEY (FornecedorID) REFERENCES Fornecedores(FornecedorID) ON DELETE CASCADE
+);
+
+-- Criação da Tabela de Pedidos de Reposição com a chave estrangeira e ON DELETE CASCADE
+CREATE TABLE PedidosReposicao (
+  PedidoID INT PRIMARY KEY AUTO_INCREMENT,
+  ProdutoID INT,
+  QuantidadeReposicao INT,
+  DataPedido DATE,
+  FOREIGN KEY (ProdutoID) REFERENCES Produtos(ProdutoID) ON DELETE CASCADE
+);
+
+-- Inserção de Dados na Tabela de Fornecedores
+INSERT INTO Fornecedores (NomeFornecedor, ContatoFornecedor, TelefoneFornecedor) VALUES
+('Fornecedor A', 'contato@fornecedorA.com', '1234-5678'),
+('Fornecedor B', 'contato@fornecedorB.com', '8765-4321');
+
+-- Inserção de Dados na Tabela de Produtos
+INSERT INTO Produtos (NomeProduto, QuantidadeEstoque, PrecoUnitario, FornecedorID) VALUES
+('Produto X', 50, 10.00, 1),
+('Produto Y', 30, 15.50, 2);
+
+-- Inserção de Dados na Tabela de Pedidos de Reposição
+INSERT INTO PedidosReposicao (ProdutoID, QuantidadeReposicao, DataPedido) VALUES
+(1, 20, '2024-08-10'),
+(2, 50, '2024-08-12');
+
+-- Consulta de Todos os Produtos em Estoque
+SELECT * FROM Produtos;
+
+-- Consulta de Todos os Pedidos de Reposição
+SELECT p.NomeProduto, pr.QuantidadeReposicao, pr.DataPedido 
+FROM PedidosReposicao pr 
+JOIN Produtos p ON pr.ProdutoID = p.ProdutoID;
+
+-- Consulta dos Fornecedores dos Produtos
+SELECT p.NomeProduto, f.NomeFornecedor 
+FROM Produtos p 
+JOIN Fornecedores f ON p.FornecedorID = f.FornecedorID;
+
+-- Atualização da Quantidade de Estoque de um Produto
+UPDATE Produtos 
+SET QuantidadeEstoque = QuantidadeEstoque + 20 
+WHERE ProdutoID = 1;
+
+-- Deleção de um Fornecedor (após configurar o ON DELETE CASCADE)
+DELETE FROM Fornecedores WHERE FornecedorID = 2;
+
+-- Deleção de um Produto
+DELETE FROM Produtos WHERE ProdutoID = 2;
